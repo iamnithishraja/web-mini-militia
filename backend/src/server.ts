@@ -9,7 +9,7 @@ export class Server {
   private app: express.Application;
   private server: http.Server;
   private io: SocketIOServer;
-  private port: number = 4000;
+  private port: number = 80;
 
   private constructor() {
     this.app = express();
