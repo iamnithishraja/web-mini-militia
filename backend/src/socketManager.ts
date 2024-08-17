@@ -1,6 +1,7 @@
 import { Server as SocketIOServer, Socket } from "socket.io";
 import { GameState } from "./gameState";
 import { Server } from "./server";
+import { ARENA_HEIGHT, ARENA_WIDTH } from "./constents";
 
 export class SocketManager {
   private static instance: SocketManager;
@@ -31,7 +32,12 @@ export class SocketManager {
       });
 
       socket.on("initGame", ({ username }) => {
-        this.gameState.addPlayer(socket.id, username, 1024, 576);
+        this.gameState.addPlayer(
+          socket.id,
+          username,
+          ARENA_WIDTH,
+          ARENA_HEIGHT
+        );
       });
 
       socket.on("disconnect", (reason) => {

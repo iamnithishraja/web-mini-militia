@@ -1,4 +1,10 @@
-import { SPEED, RADIUS, PROJECTILE_RADIUS } from "./constents";
+import {
+  SPEED,
+  RADIUS,
+  PROJECTILE_RADIUS,
+  ARENA_WIDTH,
+  ARENA_HEIGHT,
+} from "./constents";
 
 interface Player {
   x: number;
@@ -52,15 +58,17 @@ export class GameState {
     height: number
   ): void {
     this.players[id] = {
-      x: 1024 * Math.random(),
-      y: 576 * Math.random(),
+      // x: ARENA_WIDTH * Math.random(),
+      // y: ARENA_HEIGHT * Math.random(),
+      x: 0,
+      y: 0,
       color: `hsl(${360 * Math.random()}, 100%, 50%)`,
       sequenceNumber: 0,
       score: 0,
       username,
       canvas: { width, height },
       radius: RADIUS,
-    };    
+    };
   }
 
   public removePlayer(id: string): void {
@@ -95,7 +103,7 @@ export class GameState {
 
     player.sequenceNumber = sequenceNumber;
     console.log(player.x);
-    
+
     switch (keycode) {
       case "KeyW":
         player.y -= SPEED;
@@ -116,9 +124,11 @@ export class GameState {
 
   private keepPlayerInBounds(player: Player): void {
     if (player.x - player.radius < 0) player.x = player.radius;
-    if (player.x + player.radius > 1024) player.x = 1024 - player.radius;
+    if (player.x + player.radius > ARENA_WIDTH)
+      player.x = ARENA_WIDTH - player.radius;
     if (player.y - player.radius < 0) player.y = player.radius;
-    if (player.y + player.radius > 576) player.y = 576 - player.radius;
+    if (player.y + player.radius > ARENA_HEIGHT)
+      player.y = ARENA_HEIGHT - player.radius;
   }
 
   public updateProjectiles(): void {
