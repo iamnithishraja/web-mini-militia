@@ -58,10 +58,8 @@ export class GameState {
     height: number
   ): void {
     this.players[id] = {
-      // x: ARENA_WIDTH * Math.random(),
-      // y: ARENA_HEIGHT * Math.random(),
-      x: 0,
-      y: 0,
+      x: ARENA_WIDTH * Math.random(),
+      y: ARENA_HEIGHT * Math.random(),
       color: `hsl(${360 * Math.random()}, 100%, 50%)`,
       sequenceNumber: 0,
       score: 0,

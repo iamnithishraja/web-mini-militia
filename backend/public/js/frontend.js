@@ -148,24 +148,6 @@ function animate() {
   animationId = requestAnimationFrame(animate);
   // c.fillStyle = 'rgba(0, 0, 0, 0.1)'
   c.clearRect(0, 0, canvas.width, canvas.height);
-  if (frontEndPlayers[socket.id]) {
-    cameraX =
-      frontEndPlayers[socket.id].x - canvas.width / (2 * devicePixelRatio);
-    cameraY =
-      frontEndPlayers[socket.id].y - canvas.height / (2 * devicePixelRatio);
-
-    // Clamp camera position to arena bounds
-    cameraX = Math.max(
-      0,
-      Math.min(cameraX, ARENA_WIDTH - canvas.width / devicePixelRatio)
-    );
-    cameraY = Math.max(
-      0,
-      Math.min(cameraY, ARENA_HEIGHT - canvas.height / devicePixelRatio)
-    );
-  }
-  c.save();
-  c.translate(-cameraX, -cameraY);
   minimapCtx.clearRect(0, 0, MINIMAP_SIZE, MINIMAP_SIZE);
   minimapCtx.fillStyle = "rgba(0, 0, 0, 0.5)";
   minimapCtx.fillRect(0, 0, MINIMAP_SIZE, MINIMAP_SIZE);
@@ -189,6 +171,22 @@ function animate() {
         (frontEndPlayers[id].target.x - frontEndPlayers[id].x) * 0.5;
       frontEndPlayers[id].y +=
         (frontEndPlayers[id].target.y - frontEndPlayers[id].y) * 0.5;
+      cameraX =
+        frontEndPlayers[socket.id].x - canvas.width / (2 * devicePixelRatio);
+      cameraY =
+        frontEndPlayers[socket.id].y - canvas.height / (2 * devicePixelRatio);
+
+      // Clamp camera position to arena bounds
+      cameraX = Math.max(
+        0,
+        Math.min(cameraX, ARENA_WIDTH - canvas.width / devicePixelRatio)
+      );
+      cameraY = Math.max(
+        0,
+        Math.min(cameraY, ARENA_HEIGHT - canvas.height / devicePixelRatio)
+      );
+      c.save();
+      c.translate(-cameraX, -cameraY);
     }
 
     frontEndPlayer.draw();
