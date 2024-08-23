@@ -100,7 +100,8 @@ export class GameState {
     if (!player) return;
 
     player.sequenceNumber = sequenceNumber;
-    
+    console.log(player.x);
+
     switch (keycode) {
       case "KeyW":
         player.y -= SPEED;
