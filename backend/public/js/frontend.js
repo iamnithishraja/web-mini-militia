@@ -144,6 +144,26 @@ minimapCanvas.width = MINIMAP_SIZE;
 minimapCanvas.height = MINIMAP_SIZE;
 const minimapScale = MINIMAP_SIZE / Math.max(ARENA_WIDTH, ARENA_HEIGHT);
 
+const GRID_SIZE = 50; 
+const GRID_COLOR = 'rgba(200, 200, 200, 0.2)'; 
+
+function drawGrid() {
+  c.beginPath();
+  c.strokeStyle = GRID_COLOR;
+
+  for (let x = GRID_SIZE - (cameraX % GRID_SIZE); x < canvas.width; x += GRID_SIZE) {
+    c.moveTo(x, 0);
+    c.lineTo(x, canvas.height);
+  }
+
+  for (let y = GRID_SIZE - (cameraY % GRID_SIZE); y < canvas.height; y += GRID_SIZE) {
+    c.moveTo(0, y);
+    c.lineTo(canvas.width, y);
+  }
+
+  c.stroke();
+}
+
 function animate() {
   animationId = requestAnimationFrame(animate);
   c.clearRect(0, 0, canvas.width, canvas.height);
@@ -151,15 +171,19 @@ function animate() {
   for (const id in frontEndPlayers) {
     const frontEndPlayer = frontEndPlayers[id];
     if (frontEndPlayer.target) {
-      frontEndPlayers[id].x += (frontEndPlayers[id].target.x - frontEndPlayers[id].x) * 0.5;
-      frontEndPlayers[id].y += (frontEndPlayers[id].target.y - frontEndPlayers[id].y) * 0.5;
+      frontEndPlayers[id].x +=
+        (frontEndPlayers[id].target.x - frontEndPlayers[id].x) * 0.5;
+      frontEndPlayers[id].y +=
+        (frontEndPlayers[id].target.y - frontEndPlayers[id].y) * 0.5;
     }
   }
 
   // Then update camera position
   if (frontEndPlayers[socket.id]) {
-    cameraX = frontEndPlayers[socket.id].x - canvas.width / (2 * devicePixelRatio);
-    cameraY = frontEndPlayers[socket.id].y - canvas.height / (2 * devicePixelRatio);
+    cameraX =
+      frontEndPlayers[socket.id].x - canvas.width / (2 * devicePixelRatio);
+    cameraY =
+      frontEndPlayers[socket.id].y - canvas.height / (2 * devicePixelRatio);
 
     // Clamp camera position to arena bounds
     cameraX = Math.max(
@@ -171,7 +195,7 @@ function animate() {
       Math.min(cameraY, ARENA_HEIGHT - canvas.height / devicePixelRatio)
     );
   }
-
+  drawGrid();
   c.save();
   c.translate(-cameraX, -cameraY);
 
@@ -209,7 +233,7 @@ function animate() {
   for (const id in frontEndProjectiles) {
     const frontEndProjectile = frontEndProjectiles[id];
     frontEndProjectile.draw();
-  } 
+  }
   c.restore();
 }
 
@@ -243,28 +267,24 @@ setInterval(() => {
   if (keys.w.pressed) {
     sequenceNumber++;
     playerInputs.push({ sequenceNumber, dx: 0, dy: -SPEED });
-    // frontEndPlayers[socket.id].y -= SPEED
     socket.emit("keydown", { keycode: "KeyW", sequenceNumber });
   }
 
   if (keys.a.pressed) {
     sequenceNumber++;
     playerInputs.push({ sequenceNumber, dx: -SPEED, dy: 0 });
-    // frontEndPlayers[socket.id].x -= SPEED
     socket.emit("keydown", { keycode: "KeyA", sequenceNumber });
   }
 
   if (keys.s.pressed) {
     sequenceNumber++;
     playerInputs.push({ sequenceNumber, dx: 0, dy: SPEED });
-    // frontEndPlayers[socket.id].y += SPEED
     socket.emit("keydown", { keycode: "KeyS", sequenceNumber });
   }
 
   if (keys.d.pressed) {
     sequenceNumber++;
     playerInputs.push({ sequenceNumber, dx: SPEED, dy: 0 });
-    // frontEndPlayers[socket.id].x += SPEED
     socket.emit("keydown", { keycode: "KeyD", sequenceNumber });
   }
 }, 15);
